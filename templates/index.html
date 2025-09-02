@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Home - SME AI Suite{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-center" style="height: 80vh;">
+    <div class="text-center">
+        <h1 class="display-4">Welcome to the SME AI Suite</h1>
+        <p class="lead text-muted">Your intelligent assistant for financial forecasting and optimization.</p>
+        <hr class="my-4">
+        <p>Select a tool from the sidebar to get started.</p>
+        <a class="btn btn-primary btn-lg" href="{{ url_for('cashflow') }}" role="button">Analyze Cashflow</a>
+        <a class="btn btn-secondary btn-lg" href="{{ url_for('debt') }}" role="button">Optimize Debt</a>
+    </div>
+</div>
+{% endblock %}

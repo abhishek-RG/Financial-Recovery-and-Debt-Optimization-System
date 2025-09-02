@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Debt Optimization{% endblock %}
+
+{% block content %}
+<h2 class="page-title">Debt - Risk Scoring & Optimization</h2>
+
+<div class="card controls-card mb-4">
+    <div class="card-body">
+        <form action="{{ url_for('debt') }}" method="POST" enctype="multipart/form-data">
+            <div class="row align-items-end g-3">
+                <div class="col-md-10">
+                    <label for="file" class="form-label">Upload Debt CSV</label>
+                    <input type="file" name="file" class="form-control" id="file" required>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Analyze Debt</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+{% if file_uploaded %}
+{% if alerts %}
+<div class="row">
+    <div class="col-12">
+        {% for alert in alerts %}
+        <div class="alert alert-{{ alert.cls }}" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ alert.msg }}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card kpi-card">
+            <div class="card-body text-center">
+                <h6 class="card-subtitle mb-2 text-muted">Total Principal</h6>
+                <h2 class="card-title">{{ "${:,.0f}".format(debt_kpis.total_principal) }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card kpi-card">
+            <div class="card-body text-center">
+                <h6 class="card-subtitle mb-2 text-muted">Total Outstanding</h6>
+                <h2 class="card-title">{{ "${:,.0f}".format(debt_kpis.total_outstanding) }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card kpi-card">
+            <div class="card-body text-center">
+                <h6 class="card-subtitle mb-2 text-muted">Total Monthly EMI</h6>
+                <h2 class="card-title">{{ "${:,.0f}".format(debt_kpis.total_emi) }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-body">
+                {{ graph_rate_dist|safe }}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card">
+            <div class="card-header">Data Preview</div>
+            <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+                <div class="table-responsive">
+                    {{ table_html|safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

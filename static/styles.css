@@ -1,0 +1,162 @@
+/* Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* CSS Variables for Dark Theme */
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --background-color: #1a1a2e;
+    --sidebar-color: #16213e;
+    --card-color: #0f3460;
+    --text-color: #e3e3e3;
+    --text-muted-color: #a9a9a9;
+    --border-color: #5372F0;
+    --accent-color: #e94560;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+/* Sidebar Navigation */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 240px;
+    background: var(--sidebar-color);
+    padding: 15px;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.sidebar h3 {
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.sidebar a {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: var(--text-muted-color);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+}
+
+.sidebar a:hover, .sidebar a.active {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+/* Main Content Area */
+.main-content {
+    margin-left: 240px;
+    padding: 2rem;
+    width: calc(100% - 240px);
+}
+
+.page-title {
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+/* Card Styling */
+.card {
+    background-color: var(--card-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    color: var(--text-color);
+}
+
+.card-header {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid var(--border-color);
+    font-weight: 500;
+}
+
+/* KPI Card Styling */
+.kpi-card .card-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.kpi-card .card-subtitle {
+    color: var(--text-muted-color) !important;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+}
+
+/* Controls and Forms */
+.controls-card {
+    background-color: var(--sidebar-color);
+    border-color: var(--border-color);
+}
+
+.form-label {
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.form-control, .form-select {
+    background-color: var(--card-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: var(--card-color);
+    color: var(--text-color);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+}
+
+.form-control::file-selector-button {
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+}
+
+/* Table Styling */
+.table {
+    --bs-table-bg: transparent;
+    --bs-table-color: var(--text-color);
+    --bs-table-border-color: var(--border-color);
+    --bs-table-striped-color: var(--text-color);
+    --bs-table-hover-color: #fff;
+    --bs-table-hover-bg: rgba(0, 123, 255, 0.15);
+}
+
+.table thead th {
+    border-bottom-width: 2px;
+}
+
+/* Alerts */
+.alert {
+    border: none;
+    color: #fff;
+}
+.alert-warning { background-color: #ff9800; }
+.alert-danger { background-color: var(--accent-color); }
+.alert-info { background-color: #03a9f4; }
+
+/* Bootstrap Overrides */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+}

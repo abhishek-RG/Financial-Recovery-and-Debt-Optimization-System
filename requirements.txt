@@ -1,0 +1,7 @@
+Flask==3.0.2
+pandas==2.3.2
+numpy==1.26.4
+plotly==5.22.0
+scikit-learn==1.4.2
+flask-cors==4.0.1   # if you use CORS
+gunicorn==21.2.0    # for deployment (optional)

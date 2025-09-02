@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}Cashflow Analysis{% endblock %}
+
+{% block content %}
+<h2 class="page-title">Cashflow Forecasting & Insights</h2>
+
+<div class="card controls-card mb-4">
+    <div class="card-body">
+        <form action="{{ url_for('cashflow') }}" method="POST" enctype="multipart/form-data">
+            <div class="row align-items-end g-3">
+                <div class="col-md-4">
+                    <label for="file" class="form-label">Upload CSV</label>
+                    <input type="file" name="file" class="form-control" id="file" required>
+                </div>
+                <div class="col-md-2">
+                    <label for="model_choice" class="form-label">Model</label>
+                    <select name="model_choice" id="model_choice" class="form-select">
+                        <option value="RandomForest" {% if model_choice == 'RandomForest' %}selected{% endif %}>Random Forest</option>
+                        <option value="GradientBoosting" {% if model_choice == 'GradientBoosting' %}selected{% endif %}>Gradient Boosting</option>
+                        <option value="LinearRegression" {% if model_choice == 'LinearRegression' %}selected{% endif %}>Linear Regression</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label for="test_size" class="form-label">Test Size (%)</label>
+                    <input type="number" name="test_size" id="test_size" class="form-control" value="{{ test_size }}" min="10" max="50">
+                </div>
+                <div class="col-md-2">
+                    <label for="periods" class="form-label">Forecast Periods</label>
+                    <input type="number" name="periods" id="periods" class="form-control" value="{{ periods }}" min="1">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Run Analysis</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+{% if file_uploaded %}
+{% if alerts %}
+<div class="row">
+    <div class="col-12">
+        {% for alert in alerts %}
+        <div class="alert alert-{{ alert.cls }}" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ alert.msg }}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card kpi-card">
+            <div class="card-body text-center">
+                <h6 class="card-subtitle mb-2 text-muted">Avg Net Cash</h6>
+                <h2 class="card-title">{{ "{:,.0f}".format(kpis.avg_cash) }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card kpi-card">
+            <div class="card-body text-center">
+                <h6 class="card-subtitle mb-2 text-muted">Recent Avg (last 6)</h6>
+                <h2 class="card-title">{{ "{:,.0f}".format(kpis.recent_mean) }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card kpi-card">
+            <div class="card-body text-center">
+                <h6 class="card-subtitle mb-2 text-muted">Negative Periods</h6>
+                <h2 class="card-title">{{ kpis.neg_months }} / {{ kpis.total_rows }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card kpi-card">
+            <div class="card-body text-center">
+                <h6 class="card-subtitle mb-2 text-muted">Last Net Cash</h6>
+                <h2 class="card-title {% if kpis.last_value < 0 %}text-danger{% endif %}">{{ "{:,.0f}".format(kpis.last_value) }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                {{ graph_cash|safe }}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                {{ graph_pie|safe }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    {% if graph_forecast %}
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                Forecast
+                {% if r2 is not none %}
+                <span class="badge bg-info">Model R²: {{ "%.2f"|format(r2) }}</span>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                {{ graph_forecast|safe }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% if graph_bar %}
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                {{ graph_bar|safe }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">Data Preview</div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    {{ table_html|safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
